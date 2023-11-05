@@ -63,7 +63,6 @@ const SignUpPage = () => {
 
                 <Input
                   type="email"
-                  name="email"
                   aria-invalid={errors.email ? 'true' : 'false'}
                   placeholder="Email"
                   required
@@ -80,7 +79,6 @@ const SignUpPage = () => {
                 <Input
                   type="text"
                   id="username"
-                  name="username"
                   aria-invalid={errors.username ? 'true' : 'false'}
                   placeholder="Username"
                   required
@@ -94,7 +92,6 @@ const SignUpPage = () => {
                 <Input
                   id="password"
                   type="password"
-                  name="password"
                   placeholder="Password"
                   {...register('password', {
                     required: "Required"
@@ -105,7 +102,6 @@ const SignUpPage = () => {
                 <Input
                   id="repeat-password"
                   type="password"
-                  name="repeat-password"
                   placeholder="Repeat password"
                   required
                   {...register('repeatPassword', {

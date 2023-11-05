@@ -33,10 +33,10 @@ const AccountPopover = () => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator/>
         <DropdownMenuItem disabled>
-          {user.username}
+          {user?.username}
         </DropdownMenuItem>
         <DropdownMenuItem disabled>
-          Role: {user.role}
+          Role: {user?.role}
         </DropdownMenuItem>
         <DropdownMenuSeparator/>
         <DropdownMenuItem className="flex justify-between" onClick={() => logout()}>
