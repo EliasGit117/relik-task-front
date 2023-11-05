@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button.tsx';
 import { useForm } from 'react-hook-form';
 import { Separator } from '@/components/ui/separator.tsx';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthApi } from '@/api/auth.api.ts';
+import { AuthApi } from '@/api/requests/auth.api.ts';
 import customToast from '@/lib/custom-toast.tsx';
 import { useAuthStore } from '@/stores/auth-store.ts';
+import { AuthedUser } from '@/data/dtos/authed-user.ts';
 
 type TSignInForm = {
   userNameOrEmail: string;
@@ -17,7 +18,7 @@ type TSignInForm = {
 const SignInPage = () => {
   const { register, handleSubmit, formState } = useForm<TSignInForm>();
   const { isValid, isSubmitting, errors } = formState;
-  const { setToken } = useAuthStore();
+  const { signIn } = useAuthStore();
   const navigate = useNavigate();
 
   const onSubmit = async (form: TSignInForm) => {
@@ -26,9 +27,9 @@ const SignInPage = () => {
       usernameOrEmail: form.userNameOrEmail,
       password: form.password
     })
-      .then((res: { token: string, user: any }) => {
-        navigate('/');
-        setToken(res.token);
+      .then((res: { token: string, user: AuthedUser }) => {
+        navigate('/', { replace: true });
+        signIn(res.token, res.user);
       })
       .catch(e =>
         customToast(

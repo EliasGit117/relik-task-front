@@ -1,13 +1,12 @@
 import './styles.css';
-import { FC } from 'react';
+import React, { FC, Suspense } from 'react';
 import SettingsPopover from '@/components/settings-popover.tsx';
 import lightLogo from '@/assets/logo-light.png'
 import { useTheme } from '@/lib/theme-provider.tsx';
 import { Link, Outlet } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 
 const DefaultLayout: FC = () => {
-  const { isDark } = useTheme();
-
   return (
     <>
       <header>
@@ -21,18 +20,16 @@ const DefaultLayout: FC = () => {
         </div>
       </header>
 
-      <>
+      <Suspense
+        fallback={<div className="flex justify-center flex-grow">
+          <Loader2 className="h-8 w-8 animate-spin"/>
+        </div>}
+      >
         <Outlet/>
-      </>
+      </Suspense>
 
       <footer className="mt-auto pb-2">
-        <div className="flex justify-between container py-4 text-sm">
-
-          <span>
-            @2023 Relik Task
-          </span>
-
-        </div>
+        <div className="flex justify-between container py-4 text-sm">@2023 Relik Task</div>
       </footer>
     </>
   );

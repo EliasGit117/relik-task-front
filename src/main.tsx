@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import '@/lib/axios-config.ts';
+import '@/api/axios-api.ts';
 import App from './app';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

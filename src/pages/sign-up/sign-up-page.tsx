@@ -1,13 +1,15 @@
 import { useForm } from 'react-hook-form';
-import { AlertDescription } from '@/components/ui/alert';
 import customToast from '@/lib/custom-toast.tsx';
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx';
 import { Check, Loader2, LogIn, LogInIcon } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input.tsx';
+import { Button } from '@/components/ui/button.tsx';
 import { Separator } from '@/components/ui/separator.tsx';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthApi } from '@/api/requests/auth.api.ts';
+import { AuthedUser } from '@/data/dtos/authed-user.ts';
+import { useAuthStore } from '@/stores/auth-store.ts';
 
 interface ISignUpForm {
   email: string,
@@ -17,11 +19,29 @@ interface ISignUpForm {
 }
 
 const SignUpPage = () => {
-  const { register, handleSubmit, formState } = useForm<ISignUpForm>();
+  const { register, handleSubmit, formState, watch } = useForm<ISignUpForm>();
   const { errors, isValid, isSubmitting } = formState;
+  const navigate = useNavigate();
+  const { signIn } = useAuthStore();
 
-  const onSubmit =   (data: ISignUpForm) => {
-
+  const onSubmit = async (form: ISignUpForm) => {
+    return AuthApi.signUp({
+      email: form.email,
+      password: form.password,
+      username: form.username
+    })
+      .then((res: { token: string, user: AuthedUser }) => {
+        navigate('/', { replace: true });
+        signIn(res.token, res.user);
+      })
+      .catch(e =>
+        customToast(
+          <div className="font-semibold">
+            {JSON.stringify(e.response?.data?.message, null, 2) ?? 'Error'}
+          </div>,
+          { variant: 'destructive' }
+        )
+      );
   };
 
   return (
@@ -59,6 +79,7 @@ const SignUpPage = () => {
 
                 <Input
                   type="text"
+                  id="username"
                   name="username"
                   aria-invalid={errors.username ? 'true' : 'false'}
                   placeholder="Username"
@@ -71,8 +92,9 @@ const SignUpPage = () => {
                 {errors.username && <p className="text-sm pl-2 text-destructive">{errors.username?.message}</p>}
 
                 <Input
+                  id="password"
                   type="password"
-                  name="psw"
+                  name="password"
                   placeholder="Password"
                   {...register('password', {
                     required: "Required"
@@ -81,11 +103,15 @@ const SignUpPage = () => {
                 {errors.password && <p className="text-sm pl-2 text-destructive">{errors.password?.message}</p>}
 
                 <Input
+                  id="repeat-password"
                   type="password"
-                  name="psw-repeat"
+                  name="repeat-password"
                   placeholder="Repeat password"
                   required
-                  {...register('repeatPassword')}
+                  {...register('repeatPassword', {
+                    required: "Required",
+                    validate: (value) => value === watch("password")
+                  })}
                 />
                 {
                   errors.repeatPassword && <p className="text-sm pl-2 text-destructive">

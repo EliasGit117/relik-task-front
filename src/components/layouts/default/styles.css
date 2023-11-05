@@ -2,3 +2,11 @@
   display: flex;
   flex-direction: column;
 }
+
+.active-links a.active {
+  @apply underline text-foreground;
+}
+
+.active-links a {
+  @apply text-muted-foreground;
+}

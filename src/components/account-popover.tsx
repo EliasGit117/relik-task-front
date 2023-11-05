@@ -1,25 +1,50 @@
 import { Button } from '@/components/ui/button'
+import { LogOut, UserCircle2 } from 'lucide-react';
+import { useAuthStore } from '@/stores/auth-store.ts';
+import { useNavigate } from 'react-router-dom';
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
-import { UserCircle2 } from 'lucide-react';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+} from './ui/dropdown-menu';
 
 const AccountPopover = () => {
+  const { signOut, user } = useAuthStore();
+  const navigate = useNavigate();
+
+  const logout = () => {
+    navigate('/', { replace: true });
+    signOut();
+  };
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon">
           <UserCircle2 className="h-5 w-5"/>
         </Button>
-      </PopoverTrigger>
-
-      <PopoverContent className="flex flex-col gap-2 w-44 ">
-        <h1>Some name</h1>
-      </PopoverContent>
-    </Popover>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-36">
+        <DropdownMenuLabel>
+          Account
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator/>
+        <DropdownMenuItem disabled>
+          {user.username}
+        </DropdownMenuItem>
+        <DropdownMenuItem disabled>
+          Role: {user.role}
+        </DropdownMenuItem>
+        <DropdownMenuSeparator/>
+        <DropdownMenuItem className="flex justify-between" onClick={() => logout()}>
+          Log out
+          <LogOut className="h-4 w-4"/>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }
 
