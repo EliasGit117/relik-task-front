@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
-import planning from '@/assets/planning.png';
+import planning from '@/assets/planning.webp';
 import { Button } from '@/components/ui/button.tsx';
 import { LogIn, UserPlus } from 'lucide-react';
 

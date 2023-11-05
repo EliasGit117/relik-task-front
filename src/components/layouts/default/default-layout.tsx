@@ -1,8 +1,7 @@
 import './styles.css';
 import React, { FC, Suspense } from 'react';
 import SettingsPopover from '@/components/settings-popover.tsx';
-import lightLogo from '@/assets/logo-light.png'
-import { useTheme } from '@/lib/theme-provider.tsx';
+import lightLogo from '@/assets/logo-light.webp';
 import { Link, Outlet } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 

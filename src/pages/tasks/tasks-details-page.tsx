@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button.tsx';
-import { CalendarIcon, ChevronRight, Edit, Loader2, RotateCw, Save, Trash2, Undo } from 'lucide-react';
+import { CalendarIcon, ChevronRight, Loader2, RotateCw, Save, Undo } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -59,7 +59,12 @@ const TasksDetailsPage = () => {
   const onSubmit = (form: CreateNewTask) => {
     if (id) {
       return TaskApi.replace(id, form)
-        .then(result => setTask(result))
+        .then(result => {
+          setTask(result);
+          toast({
+            title: 'Success'
+          })
+        })
         .catch((e: AxiosError<{ message: string[] }>) => {
           toast({
             variant: 'destructive',
@@ -100,7 +105,7 @@ const TasksDetailsPage = () => {
             variant="ghost"
             size="icon"
             className="rounded-3xl"
-            disabled={!form.formState.isDirty || !form.formState.isValid}
+            disabled={!form.formState.isDirty || !form.formState.isValid || form.formState.isSubmitting}
             onClick={() => form.handleSubmit(onSubmit)()}
           >
             <Save className="h-4 w-4"/>
@@ -110,18 +115,20 @@ const TasksDetailsPage = () => {
             variant="ghost"
             size="icon"
             className="rounded-3xl"
-            disabled={isLoading || !form.formState.isDirty}
+            disabled={isLoading || !form.formState.isDirty || form.formState.isSubmitting}
             onClick={() => form.reset()}
           >
             <Undo className="h-4 w-4"/>
           </Button>
 
-          <Button variant="ghost" size="icon" className="rounded-3xl" disabled={isLoading} onClick={() => loadTask()}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-3xl"
+            disabled={form.formState.isSubmitting || isLoading}
+            onClick={() => loadTask()}
+          >
             <RotateCw className="h-4 w-4"/>
-          </Button>
-
-          <Button variant="ghost" size="icon" className="rounded-3xl" disabled={isLoading} onClick={() => loadTask()}>
-            <Trash2 className="h-4 w-4"/>
           </Button>
         </div>
       </div>
@@ -186,7 +193,7 @@ const TasksDetailsPage = () => {
                                   <Button
                                     variant="outline"
                                     disabled={!field.value}
-                                    onClick={() => form.setValue('deadline', undefined)}
+                                    onClick={() => form.setValue('deadline', undefined) }
                                   >
                                     Unset
                                   </Button>

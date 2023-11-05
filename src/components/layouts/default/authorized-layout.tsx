@@ -1,7 +1,7 @@
 import './styles.css';
-import React, { FC, Suspense, useState } from 'react';
+import React, { FC, Suspense } from 'react';
 import SettingsPopover from '@/components/settings-popover.tsx';
-import lightLogo from '@/assets/logo-light.png'
+import lightLogo from '@/assets/logo-light.webp'
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import AccountPopover from '@/components/account-popover.tsx';
 import { Sidebar } from 'react-pro-sidebar';
